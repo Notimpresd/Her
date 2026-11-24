@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Universul Ancăi ✨</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Playfair Display, Plus Jakarta Sans & Caveat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            serif: ['"Playfair Display"', 'serif'],
+            hand: ['"Caveat"', 'cursive'],
+          },
+          colors: {
+            roseSoft: '#FFE4EC',
+            peachSoft: '#FFEDD5',
+            lavenderSoft: '#F3E8FF',
+            goldWarm: '#F59E0B',
+            berry: '#E11D48',
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* Fundal cald romantic cu gradient animat */
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: linear-gradient(135deg, #fff1f5 0%, #ffedd5 35%, #f5ebff 70%, #ffe4ec 100%);
+      background-size: 300% 300%;
+      animation: gradientShift 16s ease infinite;
+      color: #4a2536;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Carduri cu efect Glassmorphism luminos */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.68);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      box-shadow: 0 12px 36px -8px rgba(225, 29, 72, 0.12), 0 4px 16px -4px rgba(168, 85, 247, 0.08);
+    }
+
+    .glass-pill {
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 0 6px 20px rgba(225, 29, 72, 0.12);
+    }
+
+    /* Pulsația inimii principale */
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      14% { transform: scale(1.13); }
+      28% { transform: scale(1.03); }
+      42% { transform: scale(1.18); }
+      70% { transform: scale(1); }
+    }
+
+    .animate-heartbeat {
+      animation: heartbeat 1.8s infinite ease-in-out;
+    }
+
+    /* Undă luminoasă în jurul inimii */
+    @keyframes pulseRing {
+      0% { transform: scale(0.85); opacity: 0.75; }
+      100% { transform: scale(1.75); opacity: 0; }
+    }
+
+    .pulse-ring {
+      animation: pulseRing 2.2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+    }
+
+    /* Plutire lină pentru inimile secrete */
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(4deg); }
+    }
+
+    .float-heart {
+      animation: floatSlow 3.5s ease-in-out infinite;
+    }
+
+    /* Tremurat jucăuș al borcanului */
+    @keyframes jarWiggle {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      20% { transform: rotate(-6deg) scale(1.04); }
+      40% { transform: rotate(6deg) scale(1.05); }
+      60% { transform: rotate(-4deg) scale(1.03); }
+      80% { transform: rotate(3deg) scale(1.01); }
+    }
+
+    .animate-wiggle {
+      animation: jarWiggle 0.65s ease-in-out;
+    }
+
+    /* Mesaje drăguțe plutitoare la click/atingere */
+    @keyframes floatMessageUp {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, 0px) scale(0.75);
+      }
+      18% {
+        opacity: 1;
+        transform: translate(-50%, -18px) scale(1.05);
+      }
+      80% {
+        opacity: 1;
+        transform: translate(-50%, -58px) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -78px) scale(0.92);
+      }
+    }
+
+    .floating-toast-msg {
+      position: fixed;
+      pointer-events: none;
+      z-index: 60;
+      animation: floatMessageUp 1.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      white-space: nowrap;
+    }
+
+    /* Animații Plic & Scrisoare Secretă */
+    .envelope-container {
+      perspective: 1000px;
+    }
+
+    .envelope-flap {
+      transform-origin: top center;
+      transition: transform 0.75s cubic-bezier(0.4, 0, 0.2, 1), z-index 0.2s;
+    }
+
+    .envelope-open .envelope-flap {
+      transform: rotateX(180deg);
+      z-index: 1;
+    }
+
+    .letter-sheet {
+      transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.6s ease;
+    }
+
+    /* Canvas-ul global de particule */
+    #fx-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 55;
+    }
+
+    /* Bara de progres cu luciu */
+    .shimmer-bar {
+      background: linear-gradient(90deg, #fb7185, #f43f5e, #f59e0b, #ec4899);
+      background-size: 200% 100%;
+      animation: shimmerMove 3s linear infinite;
+    }
+
+    @keyframes shimmerMove {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+  </style>
+</head>
+<body class="min-h-screen relative selection:bg-rose-200 selection:text-rose-900">
+
+  <!-- Canvas global pentru inimi, sclipici și artificii -->
+  <canvas id="fx-canvas"></canvas>
+
+  <!-- Buton flotant pentru Sunet (Web Audio API) -->
+  <button
+    id="sound-toggle"
+    type="button"
+    aria-label="Activează sau dezactivează sunetul"
+    class="fixed top-4 right-4 z-50 glass-pill px-3.5 py-2 rounded-full flex items-center gap-2 text-xs sm:text-sm font-semibold text-rose-800 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+  >
+    <span id="sound-icon" class="text-base">🎵</span>
+    <span id="sound-label">Sunet: Pornit</span>
+  </button>
+
+  <!-- ========================================================= -->
+  <!-- 1. ECRAN DE BUN VENIT PENTRU ANCA                         -->
+  <!-- ========================================================= -->
+  <section
+    id="welcome-screen"
+    class="fixed inset-0 z-40 flex flex-col items-center justify-center p-6 text-center transition-all duration-700"
+    style="background: radial-gradient(circle at 50% 35%, #fff5f7 0%, #ffe4ec 45%, #f3e8ff 100%);"
+  >
+    <!-- Elemente decorative ambientale -->
+    <div class="absolute top-12 left-8 text-3xl opacity-60 animate-bounce" style="animation-duration: 3s;">✨</div>
+    <div class="absolute top-24 right-10 text-2xl opacity-60 animate-pulse">🌸</div>
+    <div class="absolute bottom-16 left-12 text-2xl opacity-60 animate-pulse">🦋</div>
+    <div class="absolute bottom-20 right-10 text-3xl opacity-60 animate-bounce" style="animation-duration: 3.6s;">💖</div>
+
+    <div class="max-w-lg w-full glass-card rounded-3xl p-8 sm:p-10 relative overflow-hidden">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-100/90 text-rose-700 text-xs sm:text-sm font-semibold mb-5">
+        <span>✨ Surpriză specială</span>
+        <span>•</span>
+        <span>Doar pentru tine</span>
+      </div>
+
+      <h1 class="font-serif text-3xl sm:text-5xl font-bold text-rose-950 leading-tight mb-4">
+        Bună, <span class="text-transparent bg-clip-text bg-gradient-to-r from-rose-600 via-pink-500 to-amber-500">Anca!</span> ✨
+      </h1>
+
+      <p class="text-base sm:text-lg text-rose-900/80 leading-relaxed mb-8">
+        Am pregătit un mic univers plin de surprize, zâmbete și magie doar pentru tine.
+      </p>
+
+      <!-- Inima mare interactivă de start -->
+      <div class="relative inline-flex items-center justify-center my-2">
+        <span class="absolute w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-rose-400/30 pulse-ring"></span>
+        <span class="absolute w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-pink-300/30 pulse-ring" style="animation-delay: 0.8s;"></span>
+
+        <button
+          id="enter-universe-btn"
+          type="button"
+          aria-label="Intră în universul Ancăi"
+          class="relative z-10 w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-gradient-to-br from-rose-500 via-pink-500 to-amber-400 shadow-xl shadow-rose-400/40 flex flex-col items-center justify-center text-white animate-heartbeat hover:brightness-105 active:scale-90 transition-all cursor-pointer focus:outline-none"
+        >
+          <svg class="w-14 h-14 sm:w-16 sm:h-16 drop-shadow-md" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+        </button>
+      </div>
+
+      <p class="mt-6 text-sm font-medium text-rose-700/80 animate-pulse">
+        Atinge inima pentru a deschide universul 💫
+      </p>
+    </div>
+  </section>
+
+  <!-- ========================================================= -->
+  <!-- CONȚINUTUL PRINCIPAL AL UNIVERSULUI ANCĂI                 -->
+  <!-- ========================================================= -->
+  <main id="main-universe" class="hidden opacity-0 transition-opacity duration-700 max-w-5xl mx-auto px-4 sm:px-6 pt-16 pb-24 space-y-10 sm:space-y-14">
+
+    <!-- Antet & Sfat interactiv -->
+    <header class="text-center max-w-2xl mx-auto pt-2">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-pill text-xs sm:text-sm font-semibold text-rose-700 mb-3">
+        <span>🌸 Bine ai venit, Anca</span>
+        <span>•</span>
+        <span>Atinge oriunde pe ecran pentru magie ✨</span>
+      </div>
+      <h2 class="font-serif text-3xl sm:text-5xl font-bold text-rose-950 tracking-tight">
+        Colțișorul Tău de Fericire
+      </h2>
+      <p class="mt-3 text-sm sm:text-base text-rose-900/75">
+        Explorează fiecare surpriză de mai jos, joacă-te în voie și nu uita: oriunde apeși sau miști degetul, apar inimi și mesaje doar pentru tine! 💕
+      </p>
+    </header>
+
+    <!-- ======================================================= -->
+    <!-- 3. JOCUL „VÂNĂTOAREA DE INIMI SECRETE”                  -->
+    <!-- ======================================================= -->
+    <section class="glass-card rounded-3xl p-6 sm:p-8 relative overflow-hidden">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-rose-500">Mini-Joc Interactiv</span>
+          <h3 class="font-serif text-2xl sm:text-3xl font-bold text-rose-950 mt-0.5">
+            Vânătoarea de Inimi Secrete 💖
+          </h3>
+          <p class="text-sm text-rose-900/75 mt-1">
+            Apasă pe toate cele 10 inimi plutitoare pentru a descoperi mesajele ascunse și marea surpriză!
+          </p>
+        </div>
+
+        <!-- Contor Progres -->
+        <div class="glass-pill px-4 py-2.5 rounded-2xl flex items-center gap-3 self-start sm:self-center shrink-0">
+          <span class="text-xl">💝</span>
+          <div>
+            <div class="text-xs text-rose-700 font-medium">Descoperite</div>
+            <div id="hearts-counter" class="text-base sm:text-lg font-bold text-rose-950">0 / 10 inimi</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bara de progres a inimilor -->
+      <div class="w-full h-3 bg-rose-100 rounded-full overflow-hidden mb-6 p-0.5">
+        <div id="hearts-progress-bar" class="h-full shimmer-bar rounded-full transition-all duration-500" style="width: 0%;"></div>
+      </div>
+
+      <!-- Grădina / Cerul cu 10 inimi plutitoare -->
+      <div
+        id="secret-hearts-arena"
+        class="grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-4 p-4 sm:p-6 rounded-2xl bg-gradient-to-b from-white/60 to-rose-50/70 border border-white/80"
+      >
+        <!-- Inimile sunt generate dinamic din JS -->
+      </div>
+
+      <!-- Zona în care apare mesajul inimii tocmai descoperite -->
+      <div id="heart-reveal-box" class="mt-6 rounded-2xl bg-gradient-to-r from-rose-100/80 via-amber-50/80 to-purple-100/80 border border-white p-5 text-center transition-all duration-300">
+        <p id="heart-reveal-text" class="text-base sm:text-lg font-medium text-rose-900">
+          ✨ Alege prima inimioară strălucitoare de mai sus pentru a-i citi secretul!
+        </p>
+      </div>
+
+      <!-- Banner Surpriză Mare (Deblocat la 10/10) -->
+      <div
+        id="hearts-grand-prize"
+        class="hidden mt-6 rounded-2xl bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 p-6 text-white text-center shadow-lg shadow-rose-400/30 transition-all duration-500"
+      >
+        <div class="text-3xl sm:text-4xl mb-2">👑🎆💖🎆👑</div>
+        <h4 class="font-serif text-2xl sm:text-3xl font-bold mb-2">
+          Felicitări, Anca! Ai găsit toate cele 10 inimi!
+        </h4>
+        <p class="text-sm sm:text-base text-white/95 max-w-xl mx-auto leading-relaxed mb-4">
+          Ai deblocat statutul oficial de <strong>Cea Mai Minunată Fată din Univers</strong>! Fiecare inimă de aici e doar o mică parte din cât de multă bucurie aduci în jurul tău zi de zi. ✨
+        </p>
+        <button
+          id="replay-fireworks-btn"
+          type="button"
+          class="px-5 py-2.5 rounded-full bg-white text-rose-600 font-bold text-sm shadow-md hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+        >
+          Mai vreau artificii din inimi! 🎆
+        </button>
+      </div>
+    </section>
+
+    <!-- ======================================================= -->
+    <!-- RÂND CU 2 COLOANE: BORCANUL MAGIC & CONTORUL DE IUBIRE  -->
+    <!-- ======================================================= -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+      <!-- 4. BORCANUL MAGIC CU COMPLIMENTE -->
+      <section class="glass-card rounded-3xl p-6 sm:p-8 flex flex-col justify-between text-center">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-amber-600">Doză de zâmbete</span>
+          <h3 class="font-serif text-2xl sm:text-3xl font-bold text-rose-950 mt-0.5">
+            Borcanul Magic cu Complimente ✨
+          </h3>
+          <p class="text-sm text-rose-900/75 mt-1">
+            Apasă pe borcan ori de câte ori vrei să extragi un bilețel dulce despre tine.
+          </p>
+        </div>
+
+        <!-- Ilustrație SVG interactivă a Borcanului Magic -->
+        <div class="my-6 flex flex-col items-center justify-center">
+          <button
+            id="magic-jar-btn"
+            type="button"
+            aria-label="Apasă pe Borcanul Magic cu Complimente"
+            class="group relative p-3 rounded-3xl focus:outline-none cursor-pointer transition-transform hover:scale-105 active:scale-95"
+          >
+            <svg id="magic-jar-svg" class="w-44 h-52 sm:w-48 sm:h-56 drop-shadow-xl" viewBox="0 0 200 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Strălucire în spate -->
+              <circle cx="100" cy="135" r="76" fill="url(#jarGlow)" opacity="0.65"/>
+              <!-- Capac de plută / auriu -->
+              <rect x="62" y="18" width="76" height="20" rx="8" fill="url(#lidGrad)" stroke="#D97706" stroke-width="2"/>
+              <rect x="56" y="34" width="88" height="12" rx="6" fill="#FDE68A" stroke="#F59E0B" stroke-width="2"/>
+              <!-- Corpul borcanului din sticlă -->
+              <path d="M48 56C48 48 56 46 64 46H136C144 46 152 48 152 56V66C162 72 166 84 166 98V194C166 212 152 224 134 224H66C48 224 34 212 34 194V98C34 84 38 72 48 66V56Z" fill="url(#glassBody)" stroke="#FFFFFF" stroke-width="3.5"/>
+              <!-- Panglică roz la gât -->
+              <path d="M46 58C75 64 125 64 154 58" stroke="#FB7185" stroke-width="7" stroke-linecap="round"/>
+              <path d="M100 62L84 78M100 62L116 78" stroke="#F43F5E" stroke-width="5" stroke-linecap="round"/>
+              <circle cx="100" cy="61" r="6" fill="#E11D48"/>
+
+              <!-- Bilețele colorate rulate în interior -->
+              <rect x="52" y="155" width="38" height="14" rx="7" transform="rotate(-18 52 155)" fill="#FECDD3" stroke="#FB7185" stroke-width="1.5"/>
+              <rect x="104" y="162" width="40" height="14" rx="7" transform="rotate(14 104 162)" fill="#FDE68A" stroke="#F59E0B" stroke-width="1.5"/>
+              <rect x="74" y="182" width="44" height="14" rx="7" transform="rotate(-6 74 182)" fill="#E9D5FF" stroke="#C084FC" stroke-width="1.5"/>
+              <rect x="50" y="188" width="34" height="13" rx="6.5" transform="rotate(22 50 188)" fill="#FED7AA" stroke="#FB923C" stroke-width="1.5"/>
+              <rect x="115" y="186" width="36" height="13" rx="6.5" transform="rotate(-24 115 186)" fill="#FBCFE8" stroke="#F472B6" stroke-width="1.5"/>
+
+              <!-- Inimioare și stele plutitoare în borcan -->
+              <path d="M76 122C76 118 71 115 68 118C65 115 60 118 60 122C60 127 68 132 68 132C68 132 76 127 76 122Z" fill="#F43F5E"/>
+              <path d="M136 130C136 126 131 123 128 126C125 123 120 126 120 130C120 135 128 140 128 140C128 140 136 135 136 130Z" fill="#EC4899"/>
+              <path d="M106 105C106 101 101 98 98 101C95 98 90 101 90 105C90 110 98 115 98 115C98 115 106 110 106 105Z" fill="#F59E0B"/>
+              <circle cx="84" cy="142" r="3" fill="#F59E0B"/>
+              <circle cx="118" cy="112" r="2.5" fill="#FFFFFF"/>
+              <circle cx="65" cy="96" r="2.5" fill="#F43F5E"/>
+
+              <!-- Reflexie luciu pe sticlă -->
+              <path d="M48 92V186" stroke="white" stroke-width="4" stroke-linecap="round" opacity="0.65"/>
+
+              <defs>
+                <radialGradient id="jarGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(100 135) rotate(90) scale(76)">
+                  <stop stop-color="#FDE68A"/>
+                  <stop offset="1" stop-color="#FDE68A" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="lidGrad" x1="62" y1="18" x2="138" y2="38" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#FBBF24"/>
+                  <stop offset="1" stop-color="#F59E0B"/>
+                </linearGradient>
+                <linearGradient id="glassBody" x1="34" y1="46" x2="166" y2="224" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#FFFFFF" stop-opacity="0.72"/>
+                  <stop offset="0.5" stop-color="#FFF1F2" stop-opacity="0.45"/>
+                  <stop offset="1" stop-color="#FCE7F3" stop-opacity="0.68"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Bilețelul extras din borcan -->
+        <div id="jar-note-card" class="rounded-2xl bg-amber-50/90 border border-amber-200/80 p-5 shadow-inner min-h-[108px] flex flex-col items-center justify-center transition-all duration-300">
+          <p id="jar-note-text" class="font-hand text-2xl sm:text-3xl text-rose-900 leading-snug">
+            „Apasă pe borcan ca să scoți primul tău compliment magic, Anca! ✨”
+          </p>
+        </div>
+
+        <button
+          id="draw-compliment-btn"
+          type="button"
+          class="mt-4 w-full py-3 px-6 rounded-2xl bg-gradient-to-r from-amber-400 via-rose-400 to-pink-500 text-white font-bold text-sm sm:text-base shadow-md shadow-rose-300/40 hover:brightness-105 active:scale-95 transition-all cursor-pointer"
+        >
+          Extrage un bilețel magic 💌
+        </button>
+      </section>
+
+      <!-- 6. CONTORUL DE ÎMBRĂȚIȘĂRI & IUBIRE -->
+      <section class="glass-card rounded-3xl p-6 sm:p-8 flex flex-col justify-between text-center">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-rose-500">Energie pozitivă</span>
+          <h3 class="font-serif text-2xl sm:text-3xl font-bold text-rose-950 mt-0.5">
+            Contorul de Îmbrățișări & Iubire 🤗
+          </h3>
+          <p class="text-sm text-rose-900/75 mt-1">
+            Apasă rapid pe inimă pentru a trimite îmbrățișări și a vedea până unde urcă nivelul!
+          </p>
+        </div>
+
+        <!-- Zona Inimii de Îmbrățișări -->
+        <div class="my-6 flex flex-col items-center justify-center">
+          <button
+            id="hug-heart-btn"
+            type="button"
+            aria-label="Trimite o îmbrățișare"
+            class="relative w-32 h-32 sm:w-36 sm:h-36 rounded-full bg-gradient-to-tr from-rose-500 via-pink-500 to-purple-500 text-white shadow-xl shadow-rose-400/40 flex flex-col items-center justify-center hover:scale-105 active:scale-90 transition-transform cursor-pointer focus:outline-none"
+          >
+            <span class="text-4xl sm:text-5xl mb-1 select-none">🤗</span>
+            <span class="text-xs font-bold uppercase tracking-wider">Apasă-mă!</span>
+          </button>
+
+          <div class="mt-4 flex items-center gap-2 text-sm font-semibold text-rose-800">
+            <span>Îmbrățișări trimise:</span>
+            <span id="hug-count-badge" class="px-3 py-0.5 rounded-full bg-rose-100 text-rose-700 font-bold">0</span>
+          </div>
+        </div>
+
+        <!-- Bara de Progres până la Infinit -->
+        <div class="space-y-2.5">
+          <div class="flex items-center justify-between text-sm font-bold">
+            <span class="text-rose-900">Nivel de Iubire pentru Anca:</span>
+            <span id="love-meter-percent" class="text-lg text-rose-600">0%</span>
+          </div>
+
+          <div class="w-full h-5 bg-rose-100 rounded-full overflow-hidden p-1 shadow-inner">
+            <div
+              id="love-meter-bar"
+              class="h-full shimmer-bar rounded-full transition-all duration-300"
+              style="width: 0%;"
+            ></div>
+          </div>
+
+          <p id="love-meter-status" class="text-xs sm:text-sm font-medium text-rose-800/80 min-h-[24px]">
+            Începe să apeși inima pentru a încărca rezervorul de îmbrățișări! 💕
+          </p>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ======================================================= -->
+    <!-- 5. CUPOANE RĂZUIBILE (SCRATCH CARDS)                    -->
+    <!-- ======================================================= -->
+    <section class="glass-card rounded-3xl p-6 sm:p-8">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-purple-600">Surprize garantate</span>
+          <h3 class="font-serif text-2xl sm:text-3xl font-bold text-rose-950 mt-0.5">
+            Cupoanele Tale Răzuibile 🎟️✨
+          </h3>
+          <p class="text-sm text-rose-900/75 mt-1">
+            Răzuiește cu degetul sau mouse-ul fiecare card strălucitor pentru a-ți revendica premiile!
+          </p>
+        </div>
+
+        <button
+          id="reset-scratch-btn"
+          type="button"
+          class="glass-pill px-4 py-2 rounded-full text-xs sm:text-sm font-semibold text-rose-700 hover:bg-white transition-colors self-start sm:self-center cursor-pointer"
+        >
+          ↻ Acoperă din nou
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <!-- Card 1 -->
+        <div class="scratch-card-wrapper relative h-44 rounded-2xl overflow-hidden shadow-md border-2 border-white bg-gradient-to-br from-rose-50 via-white to-amber-50 flex flex-col items-center justify-center p-5 text-center">
+          <span class="text-3xl mb-2">🍝🍷</span>
+          <h4 class="font-serif text-lg font-bold text-rose-950">Cină la alegerea ta</h4>
+          <p class="text-xs text-rose-800/80 mt-1">Tu alegi locul sau preparatul, eu mă ocup de tot! ✨</p>
+          <span class="mt-2 inline-block px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-700 text-[11px] font-bold">Valabil oricând • Cupon #1</span>
+          <canvas class="scratch-canvas absolute inset-0 w-full h-full touch-none cursor-crosshair" data-label="Răzuiește aici ✨"></canvas>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="scratch-card-wrapper relative h-44 rounded-2xl overflow-hidden shadow-md border-2 border-white bg-gradient-to-br from-purple-50 via-white to-pink-50 flex flex-col items-center justify-center p-5 text-center">
+          <span class="text-3xl mb-2">🎬🍿</span>
+          <h4 class="font-serif text-lg font-bold text-rose-950">Seară de filme & snack-uri</h4>
+          <p class="text-xs text-rose-800/80 mt-1">Maraton cu filmele tale preferate și toate bunătățile! 🧸</p>
+          <span class="mt-2 inline-block px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-700 text-[11px] font-bold">Valabil oricând • Cupon #2</span>
+          <canvas class="scratch-canvas absolute inset-0 w-full h-full touch-none cursor-crosshair" data-label="Surpriză dulce 💖"></canvas>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="scratch-card-wrapper relative h-44 rounded-2xl overflow-hidden shadow-md border-2 border-white bg-gradient-to-br from-amber-50 via-white to-rose-50 flex flex-col items-center justify-center p-5 text-center">
+          <span class="text-3xl mb-2">💆‍♀️💖</span>
+          <h4 class="font-serif text-lg font-bold text-rose-950">Îmbrățișare infinită & masaj</h4>
+          <p class="text-xs text-rose-800/80 mt-1">Răsfăț complet și relaxare 100% dedicată ție! 🌸</p>
+          <span class="mt-2 inline-block px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[11px] font-bold">Valabil oricând • Cupon #3</span>
+          <canvas class="scratch-canvas absolute inset-0 w-full h-full touch-none cursor-crosshair" data-label="Răzuiește cu drag 🌟"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================= -->
+    <!-- 7. PLICUL CU SCRISOARE SECRETĂ                          -->
+    <!-- ======================================================= -->
+    <section class="glass-card rounded-3xl p-6 sm:p-10 text-center">
+      <span class="text-xs font-bold uppercase tracking-wider text-rose-500">Un gând din suflet</span>
+      <h3 class="font-serif text-2xl sm:text-3xl font-bold text-rose-950 mt-0.5">
+        Plicul cu Scrisoare Secretă 💌
+      </h3>
+      <p class="text-sm text-rose-900/75 mt-1 mb-8">
+        Apasă pe sigiliul de ceară în formă de inimă pentru a deschide scrisoarea.
+      </p>
+
+      <!-- Plic interactiv -->
+      <div class="max-w-xl mx-auto">
+        <div
+          id="envelope-box"
+          class="envelope-container relative rounded-2xl bg-gradient-to-b from-rose-200 to-rose-300/90 p-1 shadow-xl transition-all duration-500"
+        >
+          <!-- Clapa superioară a plicului (când e închis) -->
+          <div id="envelope-closed-view" class="relative py-14 sm:py-16 px-6 rounded-xl bg-gradient-to-br from-rose-100 via-pink-100 to-amber-50 border border-white/80 overflow-hidden">
+            <!-- Linii diagonale decorative ale plicului -->
+            <svg class="absolute inset-0 w-full h-full pointer-events-none opacity-45" viewBox="0 0 400 220" preserveAspectRatio="none">
+              <path d="M0 0 L200 125 L400 0" fill="none" stroke="#F43F5E" stroke-width="2"/>
+              <path d="M0 220 L155 100 M400 220 L245 100" fill="none" stroke="#FB7185" stroke-width="1.5"/>
+            </svg>
+
+            <p class="relative z-10 font-hand text-2xl sm:text-3xl text-rose-900 mb-5">
+              Pentru cea mai specială fată: <span class="underline decoration-rose-400">Anca</span> ✨
+            </p>
+
+            <!-- Sigiliul de ceară -->
+            <button
+              id="open-letter-btn"
+              type="button"
+              aria-label="Deschide sigiliul de ceară"
+              class="relative z-10 inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-rose-600 via-red-600 to-rose-800 text-white shadow-lg shadow-rose-700/40 border-4 border-rose-400/50 hover:scale-110 active:scale-95 transition-transform cursor-pointer animate-heartbeat"
+            >
+              <svg class="w-9 h-9 drop-shadow" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              </svg>
+            </button>
+
+            <div class="relative z-10 mt-3 text-xs font-semibold text-rose-700">
+              Atinge sigiliul pentru a deschide 💫
+            </div>
+          </div>
+
+          <!-- Conținutul scrisorii (când e deschisă) -->
+          <div id="envelope-opened-view" class="hidden rounded-xl bg-[#fffdf9] p-6 sm:p-9 text-left border border-amber-200/70 shadow-inner relative">
+            <div class="flex items-center justify-between border-b border-rose-100 pb-3 mb-4">
+              <span class="font-hand text-2xl sm:text-3xl font-bold text-rose-700">Dragă Anca,</span>
+              <span class="text-xl">🌸✨</span>
+            </div>
+
+            <div class="font-hand text-xl sm:text-2xl text-rose-950/90 space-y-4 leading-relaxed">
+              <p>
+                Am vrut să creez acest mic colțișor doar pentru tine, ca să-ți amintească ori de câte ori ai nevoie cât de minunată, luminoasă și specială ești.
+              </p>
+              <p>
+                Ai un fel unic de a face zilele mai frumoase, zâmbetul tău are superputerea de a schimba instant atmosfera în bine, iar energia ta bună este cel mai frumos dar.
+              </p>
+              <p>
+                Sper ca fiecare inimioară, fiecare bilețel și fiecare mică surpriză de aici să-ți aducă un zâmbet larg pe chip. Meriți toate lucrurile frumoase din lume, azi și în fiecare zi! 💖
+              </p>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-rose-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <p class="font-hand text-2xl font-bold text-rose-600">
+                Cu mult drag și cele mai calde gânduri ✨
+              </p>
+              <button
+                id="close-letter-btn"
+                type="button"
+                class="px-4 py-1.5 rounded-full bg-rose-100 text-rose-700 text-xs font-bold hover:bg-rose-200 transition-colors self-start sm:self-auto cursor-pointer"
+              >
+                Închide plicul 💌
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Subsol jucăuș -->
+    <footer class="text-center text-xs sm:text-sm text-rose-800/70 pt-2">
+      Făcut cu mult drag și un strop de praf de stele, special pentru <strong>Anca</strong> ✨💖
+    </footer>
+
+  </main>
+
+  <!-- ========================================================= -->
+  <!-- LOGICA INTERACTIVĂ COMPLETĂ (JAVASCRIPT)                  -->
+  <!-- ========================================================= -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      /* ---------------------------------------------------------
+         0. SINTETIZATOR SUNETE DELICATE (WEB AUDIO API)
+         --------------------------------------------------------- */
+      let audioCtx = null;
+      let soundEnabled = true;
+
+      function initAudio() {
+        if (!audioCtx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (AudioContextClass) {
+            audioCtx = new AudioContextClass();
+          }
+        }
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+      }
+
+      function playChime(freq = 587.33, duration = 0.45, type = 'sine', volume = 0.08) {
+        if (!soundEnabled) return;
+        try {
+          initAudio();
+          if (!audioCtx) return;
+
+          const now = audioCtx.currentTime;
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, now);
+          osc.frequency.exponentialRampToValueAtTime(freq * 1.015, now + duration);
+
+          gain.gain.setValueAtTime(0.0001, now);
+          gain.gain.linearRampToValueAtTime(volume, now + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+
+          osc.start(now);
+          osc.stop(now + duration + 0.05);
+        } catch (err) {
+          // Ignorăm discret dacă browserul blochează audio înainte de interacțiune
+        }
+      }
+
+      function playChord(frequencies = [523.25, 659.25, 783.99, 1046.5]) {
+        frequencies.forEach((f, idx) => {
+          setTimeout(() => playChime(f, 0.7, 'sine', 0.07), idx * 75);
+        });
+      }
+
+      const soundToggleBtn = document.getElementById('sound-toggle');
+      const soundIcon = document.getElementById('sound-icon');
+      const soundLabel = document.getElementById('sound-label');
+
+      soundToggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        soundEnabled = !soundEnabled;
+        if (soundEnabled) {
+          initAudio();
+          playChime(783.99, 0.35);
+          soundIcon.textContent = '🎵';
+          soundLabel.textContent = 'Sunet: Pornit';
+        } else {
+          soundIcon.textContent = '🔇';
+          soundLabel.textContent = 'Sunet: Oprit';
+        }
+      });
+
+      /* ---------------------------------------------------------
+         2. SISTEM GLOBAL DE INIMI, SCLIPICI & MESAJE PLUTITOARE
+         --------------------------------------------------------- */
+      const fxCanvas = document.getElementById('fx-canvas');
+      const fxCtx = fxCanvas.getContext('2d');
+      let particles = [];
+
+      function resizeFxCanvas() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        fxCanvas.width = window.innerWidth * dpr;
+        fxCanvas.height = window.innerHeight * dpr;
+        fxCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      resizeFxCanvas();
+      window.addEventListener('resize', resizeFxCanvas);
+
+      const heartColors = ['#fb7185', '#f43f5e', '#ec4899', '#f59e0b', '#c084fc', '#fda4af'];
+      const floatingPhrases = [
+        'Ești minunată! ✨',
+        'Te iubesc! 💖',
+        'Zâmbește, Anca! 🌸',
+        'Cea mai faină! 🦋',
+        'Strălucești azi! 🌟',
+        'Ești magia mea! 💫',
+        'Superbă ca întotdeauna! 💕',
+        'Ador zâmbetul tău! 🥰'
+      ];
+
+      function spawnParticles(x, y, count = 10, burst = false) {
+        for (let i = 0; i < count; i++) {
+          const angle = burst ? (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.4 : -Math.PI / 2 + (Math.random() - 0.5) * 1.4;
+          const speed = burst ? 2.2 + Math.random() * 4.5 : 0.8 + Math.random() * 2.2;
+          particles.push({
+            x,
+            y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed - (burst ? 1.2 : 0.5),
+            size: burst ? 9 + Math.random() * 9 : 6 + Math.random() * 7,
+            alpha: 1,
+            decay: 0.014 + Math.random() * 0.012,
+            color: heartColors[Math.floor(Math.random() * heartColors.length)],
+            shape: Math.random() > 0.35 ? 'heart' : 'sparkle',
+            rotation: Math.random() * Math.PI * 2,
+            rotSpeed: (Math.random() - 0.5) * 0.08
+          });
+        }
+      }
+
+      function spawnFloatingToast(x, y) {
+        const el = document.createElement('div');
+        el.className = 'floating-toast-msg px-3.5 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-rose-200 shadow-lg text-xs sm:text-sm font-bold text-rose-600';
+        el.textContent = floatingPhrases[Math.floor(Math.random() * floatingPhrases.length)];
+
+        // Păstrăm mesajul în interiorul ecranului pe mobil
+        const safeX = Math.max(85, Math.min(window.innerWidth - 85, x));
+        const safeY = Math.max(50, Math.min(window.innerHeight - 40, y));
+        el.style.left = `${safeX}px`;
+        el.style.top = `${safeY}px`;
+
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 1650);
+      }
+
+      function drawHeartShape(ctx, x, y, size, color, alpha, rotation) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(rotation);
+        ctx.globalAlpha = Math.max(0, alpha);
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        const topCurveHeight = size * 0.3;
+        ctx.moveTo(0, topCurveHeight);
+        ctx.bezierCurveTo(0, 0, -size / 2, 0, -size / 2, topCurveHeight);
+        ctx.bezierCurveTo(-size / 2, (size + topCurveHeight) / 2, 0, (size + topCurveHeight) / 1.35, 0, size);
+        ctx.bezierCurveTo(0, (size + topCurveHeight) / 1.35, size / 2, (size + topCurveHeight) / 2, size / 2, topCurveHeight);
+        ctx.bezierCurveTo(size / 2, 0, 0, 0, 0, topCurveHeight);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+
+      function drawSparkleShape(ctx, x, y, size, color, alpha, rotation) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(rotation);
+        ctx.globalAlpha = Math.max(0, alpha);
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        for (let i = 0; i < 4; i++) {
+          const a = (i * Math.PI) / 2;
+          ctx.lineTo(Math.cos(a) * size, Math.sin(a) * size);
+          ctx.lineTo(Math.cos(a + Math.PI / 4) * (size * 0.32), Math.sin(a + Math.PI / 4) * (size * 0.32));
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+
+      function animateParticles() {
+        fxCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+        for (let i = particles.length - 1; i >= 0; i--) {
+          const p = particles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.035; // gravitație foarte lină
+          p.alpha -= p.decay;
+          p.rotation += p.rotSpeed;
+
+          if (p.alpha <= 0) {
+            particles.splice(i, 1);
+            continue;
+          }
+
+          if (p.shape === 'heart') {
+            drawHeartShape(fxCtx, p.x, p.y, p.size, p.color, p.alpha, p.rotation);
+          } else {
+            drawSparkleShape(fxCtx, p.x, p.y, p.size * 0.65, p.color, p.alpha, p.rotation);
+          }
+        }
+
+        requestAnimationFrame(animateParticles);
+      }
+      animateParticles();
+
+      // Urmă de particule la mișcarea cursorului sau degetului
+      let lastTrailTime = 0;
+      function handlePointerMove(clientX, clientY) {
+        const now = Date.now();
+        if (now - lastTrailTime > 55) {
+          spawnParticles(clientX, clientY, 2, false);
+          lastTrailTime = now;
+        }
+      }
+
+      window.addEventListener('mousemove', (e) => handlePointerMove(e.clientX, e.clientY), { passive: true });
+      window.addEventListener('touchmove', (e) => {
+        if (e.touches && e.touches[0]) {
+          handlePointerMove(e.touches[0].clientX, e.touches[0].clientY);
+        }
+      }, { passive: true });
+
+      // Explozie de inimi și mesaje la click/tap oriunde
+      window.addEventListener('pointerdown', (e) => {
+        // Nu suprapunem textul peste canvas-ul de răzuit
+        if (e.target.classList && e.target.classList.contains('scratch-canvas')) {
+          spawnParticles(e.clientX, e.clientY, 4, false);
+          return;
+        }
+        spawnParticles(e.clientX, e.clientY, 10, true);
+        spawnFloatingToast(e.clientX, e.clientY);
+      });
+
+      /* ---------------------------------------------------------
+         1. ECRAN DE BUN VENIT PENTRU ANCA
+         --------------------------------------------------------- */
+      const welcomeScreen = document.getElementById('welcome-screen');
+      const mainUniverse = document.getElementById('main-universe');
+      const enterBtn = document.getElementById('enter-universe-btn');
+
+      enterBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        initAudio();
+        playChord([523.25, 659.25, 783.99, 1046.5]);
+
+        const rect = enterBtn.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        spawnParticles(cx, cy, 42, true);
+
+        welcomeScreen.style.opacity = '0';
+        welcomeScreen.style.transform = 'scale(1.06)';
+
+        setTimeout(() => {
+          welcomeScreen.classList.add('hidden');
+          mainUniverse.classList.remove('hidden');
+          // Inițializăm canvas-urile de răzuit acum că sunt vizibile în DOM
+          initScratchCards();
+          requestAnimationFrame(() => {
+            mainUniverse.style.opacity = '1';
+          });
+        }, 550);
+      });
+
+      /* ---------------------------------------------------------
+         3. JOCUL „VÂNĂTOAREA DE INIMI SECRETE” (10 INIMI)
+         --------------------------------------------------------- */
+      const secretHeartsData = [
+        { emoji: '💖', title: 'Inima #1', msg: 'Anca, zâmbetul tău are puterea de a lumina și cea mai înnorată zi! ☀️' },
+        { emoji: '🌸', title: 'Inima #2', msg: 'Îmi place la nebunie felul tău cald și sincer de a vedea lucrurile frumoase. 🌷' },
+        { emoji: '✨', title: 'Inima #3', msg: 'Alături de tine, până și cele mai simple momente devin amintiri preferate. 💫' },
+        { emoji: '🦋', title: 'Inima #4', msg: 'Ești o combinație rară de bunătate, farmec și energie pozitivă, Anca! 🦋' },
+        { emoji: '🍓', title: 'Inima #5', msg: 'Cu tine, fiecare zi are un strop extra de culoare și voie bună! 🍓' },
+        { emoji: '🌙', title: 'Inima #6', msg: 'Ești primul gând frumos dimineața și cea mai liniștitoare stare seara. 🌙' },
+        { emoji: '🎀', title: 'Inima #7', msg: 'Admir cât de multă grijă și suflet pui în tot ceea ce faci! 🎀' },
+        { emoji: '🍯', title: 'Inima #8', msg: 'Vocea și râsul tău sunt melodia mea preferată din toată lumea. 🎶' },
+        { emoji: '🌟', title: 'Inima #9', msg: 'Meriți să fii răsfățată, apreciată și fericită în fiecare clipă! 🌟' },
+        { emoji: '👑', title: 'Inima #10', msg: 'Ai găsit ultima inimă! Ești oficial regina acestui mic univers, Anca! 👑💕' }
+      ];
+
+      // Note muzicale ascendente pentru cele 10 inimi
+      const scaleNotes = [523.25, 587.33, 659.25, 698.46, 783.99, 880.0, 987.77, 1046.5, 1174.66, 1318.51];
+
+      const arena = document.getElementById('secret-hearts-arena');
+      const counterEl = document.getElementById('hearts-counter');
+      const progressBarEl = document.getElementById('hearts-progress-bar');
+      const revealTextEl = document.getElementById('heart-reveal-text');
+      const grandPrizeEl = document.getElementById('hearts-grand-prize');
+      const discoveredSet = new Set();
+
+      function launchHeartFireworks() {
+        const bursts = 6;
+        for (let b = 0; b < bursts; b++) {
+          setTimeout(() => {
+            const rx = window.innerWidth * (0.18 + Math.random() * 0.64);
+            const ry = window.innerHeight * (0.2 + Math.random() * 0.45);
+            spawnParticles(rx, ry, 34, true);
+            playChime(scaleNotes[b % scaleNotes.length], 0.6, 'triangle', 0.07);
+          }, b * 260);
+        }
+      }
+
+      secretHeartsData.forEach((item, index) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.style.animationDelay = `${(index % 5) * 0.35}s`;
+        btn.className = 'float-heart group relative flex flex-col items-center justify-center p-4 rounded-2xl bg-white/85 border border-rose-200/80 shadow-sm hover:shadow-md hover:scale-105 active:scale-95 transition-all cursor-pointer';
+        btn.innerHTML = `
+          <span class="heart-icon text-3xl sm:text-4xl transition-transform group-hover:scale-110">${item.emoji}</span>
+          <span class="heart-status mt-1.5 text-xs font-bold text-rose-700">Secret #${index + 1}</span>
+        `;
+
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const rect = btn.getBoundingClientRect();
+          const cx = rect.left + rect.width / 2;
+          const cy = rect.top + rect.height / 2;
+
+          spawnParticles(cx, cy, 24, true);
+          playChime(scaleNotes[index], 0.55);
+
+          const isNew = !discoveredSet.has(index);
+          discoveredSet.add(index);
+
+          // Actualizăm aspectul inimii descoperite
+          btn.classList.remove('bg-white/85', 'border-rose-200/80');
+          btn.classList.add('bg-gradient-to-br', 'from-rose-100', 'to-amber-100', 'border-rose-400');
+          btn.querySelector('.heart-status').textContent = 'Descoperită ✓';
+          btn.querySelector('.heart-status').classList.replace('text-rose-700', 'text-emerald-700');
+
+          // Afișăm mesajul inimii
+          revealTextEl.innerHTML = `<span class="font-bold text-rose-600">${item.emoji} ${item.title}:</span> ${item.msg}`;
+
+          // Actualizăm progresul
+          const count = discoveredSet.size;
+          counterEl.textContent = `${count} / 10 inimi`;
+          progressBarEl.style.width = `${(count / 10) * 100}%`;
+
+          if (isNew && count === 10) {
+            grandPrizeEl.classList.remove('hidden');
+            playChord([523.25, 659.25, 783.99, 1046.5, 1318.51]);
+            launchHeartFireworks();
+          }
+        });
+
+        arena.appendChild(btn);
+      });
+
+      document.getElementById('replay-fireworks-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        launchHeartFireworks();
+      });
+
+      /* ---------------------------------------------------------
+         4. BORCANUL MAGIC CU COMPLIMENTE
+         --------------------------------------------------------- */
+      const complimentsList = [
+        'Ai cel mai molipsitor și luminos zâmbet din lume, Anca! ✨',
+        'Prezența ta face orice loc să pară mai cald și mai primitor. 🌸',
+        'Ești incredibil de inteligentă, creativă și plină de farmec! 💫',
+        'Felul în care îți pasă de ceilalți te face cu adevărat specială. 💖',
+        'Chiar și în zilele aglomerate, tu reușești să rămâi o rază de soare. ☀️',
+        'Ai un stil unic și o naturalețe care cucerește pe loc! 🦋',
+        'Cu tine, timpul trece mult prea repede pentru că totul e mai frumos. ⏳💕',
+        'Ești puternică, blândă și absolut minunată exact așa cum ești! 🌟',
+        'Oricine te are în viața lui este un om tare norocos, Anca! 🍀',
+        'Îți stă superb atunci când râzi din toată inima! 🥰',
+        'Ești inspirație pură și cel mai dulce motiv de bucurie! 🍓',
+        'Nimeni nu poate egala energia ta bună și sufletul tău cald! 🎀'
+      ];
+
+      let complimentIndex = 0;
+      const jarBtn = document.getElementById('magic-jar-btn');
+      const jarSvg = document.getElementById('magic-jar-svg');
+      const jarNoteCard = document.getElementById('jar-note-card');
+      const jarNoteText = document.getElementById('jar-note-text');
+      const drawComplimentBtn = document.getElementById('draw-compliment-btn');
+
+      function pullMagicNote(sourceEl) {
+        // Animație borcan
+        jarSvg.classList.remove('animate-wiggle');
+        void jarSvg.offsetWidth;
+        jarSvg.classList.add('animate-wiggle');
+
+        const rect = sourceEl.getBoundingClientRect();
+        spawnParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, 18, true);
+        playChord([659.25, 880.0, 1174.66]);
+
+        const note = complimentsList[complimentIndex % complimentsList.length];
+        complimentIndex++;
+
+        jarNoteCard.style.transform = 'scale(0.95)';
+        jarNoteCard.style.opacity = '0.6';
+
+        setTimeout(() => {
+          jarNoteText.textContent = `„${note}”`;
+          jarNoteCard.style.transform = 'scale(1)';
+          jarNoteCard.style.opacity = '1';
+        }, 160);
+      }
+
+      jarBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        pullMagicNote(jarBtn);
+      });
+
+      drawComplimentBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        pullMagicNote(jarBtn);
+      });
+
+      /* ---------------------------------------------------------
+         6. CONTORUL DE ÎMBRĂȚIȘĂRI & IUBIRE PÂNĂ LA INFINIT
+         --------------------------------------------------------- */
+      const hugBtn = document.getElementById('hug-heart-btn');
+      const hugCountBadge = document.getElementById('hug-count-badge');
+      const lovePercentEl = document.getElementById('love-meter-percent');
+      const loveBarEl = document.getElementById('love-meter-bar');
+      const loveStatusEl = document.getElementById('love-meter-status');
+
+      let hugCount = 0;
+      let infinityCelebrated = false;
+
+      hugBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        hugCount++;
+        hugCountBadge.textContent = hugCount;
+
+        const rect = hugBtn.getBoundingClientRect();
+        spawnParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, 16, true);
+        playChime(440 + Math.min(hugCount * 35, 700), 0.35);
+
+        if (hugCount < 10) {
+          const pct = hugCount * 10;
+          lovePercentEl.textContent = `${pct}%`;
+          loveBarEl.style.width = `${pct}%`;
+          loveStatusEl.textContent = `Încă puțin! Îmbrățișările se adună... (${pct}%) 🤗`;
+        } else if (hugCount === 10) {
+          lovePercentEl.textContent = '100%';
+          loveBarEl.style.width = '100%';
+          loveStatusEl.textContent = '100% atins! Dar pentru Anca nu ne oprim aici... mai apasă! ✨';
+        } else if (hugCount < 15) {
+          const overPct = 100 + (hugCount - 10) * 150;
+          lovePercentEl.textContent = `${overPct}% 🚀`;
+          loveBarEl.style.width = '100%';
+          loveStatusEl.textContent = `Atenție! Contorul depășește limitele normale: ${overPct}%! 💥💖`;
+        } else {
+          lovePercentEl.textContent = '∞ Infinit 💖';
+          loveBarEl.style.width = '100%';
+          loveStatusEl.innerHTML = '<strong>NIVEL MAXIM: ∞ INFINIT!</strong> Cea mai mare îmbrățișare pentru tine, Anca! 🥰🎆';
+
+          if (!infinityCelebrated) {
+            infinityCelebrated = true;
+            playChord([523.25, 659.25, 783.99, 1046.5, 1318.51]);
+            launchHeartFireworks();
+          }
+        }
+      });
+
+      /* ---------------------------------------------------------
+         5. CUPOANE RĂZUIBILE (HTML5 CANVAS TOUCH + MOUSE)
+         --------------------------------------------------------- */
+      const scratchCanvases = document.querySelectorAll('.scratch-canvas');
+
+      function setupSingleScratchCanvas(canvas) {
+        const wrapper = canvas.parentElement;
+        const rect = wrapper.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) return;
+
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        canvas.style.opacity = '1';
+        canvas.style.pointerEvents = 'auto';
+        canvas.dataset.revealed = 'false';
+
+        const ctx = canvas.getContext('2d');
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        // Strat metalic rose-gold & lavandă
+        const grad = ctx.createLinearGradient(0, 0, rect.width, rect.height);
+        grad.addColorStop(0, '#f472b6');
+        grad.addColorStop(0.5, '#fbbf24');
+        grad.addColorStop(1, '#c084fc');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, rect.width, rect.height);
+
+        // Model subtil cu buline strălucitoare
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+        for (let x = 14; x < rect.width; x += 26) {
+          for (let y = 14; y < rect.height; y += 26) {
+            ctx.beginPath();
+            ctx.arc(x, y, 2.2, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+
+        // Text invitație pe folie
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '700 16px "Plus Jakarta Sans", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(canvas.dataset.label || 'Răzuiește aici ✨', rect.width / 2, rect.height / 2);
+      }
+
+      function initScratchCards() {
+        scratchCanvases.forEach((canvas) => {
+          setupSingleScratchCanvas(canvas);
+        });
+      }
+
+      scratchCanvases.forEach((canvas) => {
+        let isScratching = false;
+        let lastSound = 0;
+
+        function getLocalCoords(clientX, clientY) {
+          const rect = canvas.getBoundingClientRect();
+          return {
+            x: clientX - rect.left,
+            y: clientY - rect.top
+          };
+        }
+
+        function scratchAt(x, y) {
+          if (canvas.dataset.revealed === 'true') return;
+          const ctx = canvas.getContext('2d');
+          ctx.globalCompositeOperation = 'destination-out';
+          ctx.beginPath();
+          ctx.arc(x, y, 24, 0, Math.PI * 2);
+          ctx.fill();
+
+          const now = Date.now();
+          if (now - lastSound > 140) {
+            playChime(920 + Math.random() * 220, 0.14, 'sine', 0.03);
+            lastSound = now;
+          }
+        }
+
+        function checkScratchCompletion() {
+          if (canvas.dataset.revealed === 'true') return;
+          const ctx = canvas.getContext('2d');
+          const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+          let transparentPixels = 0;
+          const step = 32; // eșantionare rapidă pentru performanță mobilă
+          let sampled = 0;
+
+          for (let i = 3; i < imgData.length; i += 4 * step) {
+            sampled++;
+            if (imgData[i] < 128) transparentPixels++;
+          }
+
+          if (sampled > 0 && transparentPixels / sampled > 0.52) {
+            canvas.dataset.revealed = 'true';
+            canvas.style.transition = 'opacity 0.55s ease';
+            canvas.style.opacity = '0';
+            canvas.style.pointerEvents = 'none';
+
+            const rect = canvas.getBoundingClientRect();
+            spawnParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, 24, true);
+            playChord([659.25, 783.99, 1046.5]);
+          }
+        }
+
+        // Evenimente Mouse
+        canvas.addEventListener('mousedown', (e) => {
+          e.stopPropagation();
+          isScratching = true;
+          const pt = getLocalCoords(e.clientX, e.clientY);
+          scratchAt(pt.x, pt.y);
+        });
+
+        window.addEventListener('mousemove', (e) => {
+          if (!isScratching) return;
+          const pt = getLocalCoords(e.clientX, e.clientY);
+          scratchAt(pt.x, pt.y);
+        });
+
+        window.addEventListener('mouseup', () => {
+          if (isScratching) {
+            isScratching = false;
+            checkScratchCompletion();
+          }
+        });
+
+        // Evenimente Touch (Mobile)
+        canvas.addEventListener('touchstart', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          isScratching = true;
+          const touch = e.touches[0];
+          const pt = getLocalCoords(touch.clientX, touch.clientY);
+          scratchAt(pt.x, pt.y);
+        }, { passive: false });
+
+        canvas.addEventListener('touchmove', (e) => {
+          e.preventDefault();
+          if (!isScratching) return;
+          const touch = e.touches[0];
+          const pt = getLocalCoords(touch.clientX, touch.clientY);
+          scratchAt(pt.x, pt.y);
+        }, { passive: false });
+
+        canvas.addEventListener('touchend', () => {
+          if (isScratching) {
+            isScratching = false;
+            checkScratchCompletion();
+          }
+        });
+      });
+
+      document.getElementById('reset-scratch-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        playChime(587.33, 0.35);
+        initScratchCards();
+      });
+
+      /* ---------------------------------------------------------
+         7. PLICUL CU SCRISOARE SECRETĂ
+         --------------------------------------------------------- */
+      const openLetterBtn = document.getElementById('open-letter-btn');
+      const closeLetterBtn = document.getElementById('close-letter-btn');
+      const closedView = document.getElementById('envelope-closed-view');
+      const openedView = document.getElementById('envelope-opened-view');
+
+      openLetterBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const rect = openLetterBtn.getBoundingClientRect();
+        spawnParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, 28, true);
+        playChord([523.25, 659.25, 783.99, 987.77]);
+
+        closedView.classList.add('hidden');
+        openedView.classList.remove('hidden');
+      });
+
+      closeLetterBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        playChime(523.25, 0.3);
+        openedView.classList.add('hidden');
+        closedView.classList.remove('hidden');
+      });
+    });
+  </script>
+</body>
+</html>
