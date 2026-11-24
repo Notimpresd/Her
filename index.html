@@ -184,6 +184,50 @@
       0% { background-position: 0% 50%; }
       100% { background-position: 200% 50%; }
     }
+
+    /* Rotația discului de vinil când melodia cântă */
+    @keyframes spinVinyl {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .vinyl-disc {
+      animation: spinVinyl 4.5s linear infinite;
+      animation-play-state: paused;
+    }
+
+    .vinyl-disc.is-playing {
+      animation-play-state: running;
+    }
+
+    /* Bare de egalizator animate */
+    @keyframes eqDance {
+      0%, 100% { height: 25%; }
+      50% { height: 100%; }
+    }
+
+    .eq-bar {
+      height: 30%;
+      transition: height 0.2s ease;
+    }
+
+    .eq-active .eq-bar {
+      animation: eqDance 0.7s ease-in-out infinite;
+    }
+
+    .eq-active .eq-bar:nth-child(2) { animation-delay: 0.18s; }
+    .eq-active .eq-bar:nth-child(3) { animation-delay: 0.34s; }
+    .eq-active .eq-bar:nth-child(4) { animation-delay: 0.12s; }
+
+    /* Bandă adezivă decorativă (Washi Tape) pentru rama Polaroid */
+    .washi-tape {
+      background: linear-gradient(135deg, rgba(251, 113, 133, 0.45), rgba(253, 224, 71, 0.42));
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border-left: 1px dashed rgba(255, 255, 255, 0.7);
+      border-right: 1px dashed rgba(255, 255, 255, 0.7);
+      box-shadow: 0 2px 6px rgba(225, 29, 72, 0.1);
+    }
   </style>
 </head>
 <body class="min-h-screen relative selection:bg-rose-200 selection:text-rose-900">
@@ -191,7 +235,10 @@
   <!-- Canvas global pentru inimi, sclipici și artificii -->
   <canvas id="fx-canvas"></canvas>
 
-  <!-- Buton flotant pentru Sunet (Web Audio API) -->
+  <!-- Fișierul audio de fundal (caută automat music.mp3 în același folder) -->
+  <audio id="bgMusic" src="music.mp3" loop preload="auto"></audio>
+
+  <!-- Buton flotant pentru Sunet efecte (Web Audio API) -->
   <button
     id="sound-toggle"
     type="button"
@@ -199,8 +246,73 @@
     class="fixed top-4 right-4 z-50 glass-pill px-3.5 py-2 rounded-full flex items-center gap-2 text-xs sm:text-sm font-semibold text-rose-800 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
   >
     <span id="sound-icon" class="text-base">🎵</span>
-    <span id="sound-label">Sunet: Pornit</span>
+    <span id="sound-label">Efecte: Pornite</span>
   </button>
+
+  <!-- ========================================================= -->
+  <!-- PLAYER MUZICAL PLUTITOR PENTRU MELODIA NOASTRĂ            -->
+  <!-- ========================================================= -->
+  <div
+    id="music-player-dock"
+    class="fixed bottom-4 inset-x-3 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 z-50 sm:w-auto sm:min-w-[360px] max-w-md glass-pill rounded-full px-3.5 py-2 flex items-center justify-between gap-3 border border-white/95 shadow-xl shadow-rose-500/15"
+  >
+    <!-- Disc de vinil animat + detalii melodie -->
+    <div class="flex items-center gap-3 min-w-0">
+      <div
+        id="vinyl-disc"
+        class="vinyl-disc relative w-11 h-11 rounded-full shrink-0 bg-gradient-to-tr from-rose-950 via-rose-800 to-pink-700 shadow-md flex items-center justify-center border-2 border-rose-200"
+      >
+        <!-- Șanțuri fine de vinil -->
+        <span class="absolute inset-1.5 rounded-full border border-white/15"></span>
+        <span class="absolute inset-2.5 rounded-full border border-white/10"></span>
+        <!-- Eticheta centrală roz-aurie -->
+        <span class="w-4 h-4 rounded-full bg-gradient-to-br from-amber-200 to-rose-300 flex items-center justify-center shadow-inner">
+          <span class="w-1.5 h-1.5 rounded-full bg-rose-900"></span>
+        </span>
+      </div>
+
+      <div class="min-w-0 text-left">
+        <div class="flex items-center gap-2">
+          <span id="music-title" class="text-xs sm:text-sm font-bold text-rose-950 truncate">
+            Melodia noastră ♪
+          </span>
+          <!-- Bare de egalizator -->
+          <div id="eq-bars" class="flex items-end gap-0.5 h-3.5 shrink-0" aria-hidden="true">
+            <span class="eq-bar w-0.5 bg-rose-500 rounded-full"></span>
+            <span class="eq-bar w-0.5 bg-pink-500 rounded-full"></span>
+            <span class="eq-bar w-0.5 bg-amber-500 rounded-full"></span>
+            <span class="eq-bar w-0.5 bg-rose-400 rounded-full"></span>
+          </div>
+        </div>
+        <p id="music-subtitle" class="text-[11px] text-rose-700/80 truncate">
+          Apasă Play pentru music.mp3 ✨
+        </p>
+      </div>
+    </div>
+
+    <!-- Controale: Play/Pause + Încărcare altă melodie -->
+    <div class="flex items-center gap-1.5 shrink-0">
+      <button
+        id="music-play-btn"
+        type="button"
+        aria-label="Pornește sau oprește melodia"
+        class="px-3.5 py-2 rounded-full bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 text-white text-xs font-bold shadow-md shadow-rose-400/30 flex items-center gap-1.5 hover:brightness-105 active:scale-95 transition-all cursor-pointer"
+      >
+        <span id="music-play-icon">▶</span>
+        <span id="music-play-text">Play</span>
+      </button>
+
+      <label
+        for="music-file-input"
+        title="Alege altă melodie din telefon sau calculator"
+        aria-label="Alege altă melodie"
+        class="w-9 h-9 rounded-full bg-rose-100/90 hover:bg-rose-200/90 text-rose-700 flex items-center justify-center text-sm shadow-sm active:scale-95 transition-all cursor-pointer"
+      >
+        📁
+      </label>
+      <input id="music-file-input" type="file" accept="audio/*" class="hidden" />
+    </div>
+  </div>
 
   <!-- ========================================================= -->
   <!-- 1. ECRAN DE BUN VENIT PENTRU ANCA                         -->
@@ -239,7 +351,7 @@
         <button
           id="enter-universe-btn"
           type="button"
-          aria-label="Intră în universul Ancăi"
+          aria-label="Deschide surpriza, Anca"
           class="relative z-10 w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-gradient-to-br from-rose-500 via-pink-500 to-amber-400 shadow-xl shadow-rose-400/40 flex flex-col items-center justify-center text-white animate-heartbeat hover:brightness-105 active:scale-90 transition-all cursor-pointer focus:outline-none"
         >
           <svg class="w-14 h-14 sm:w-16 sm:h-16 drop-shadow-md" viewBox="0 0 24 24" fill="currentColor">
@@ -248,16 +360,22 @@
         </button>
       </div>
 
-      <p class="mt-6 text-sm font-medium text-rose-700/80 animate-pulse">
-        Atinge inima pentru a deschide universul 💫
-      </p>
+      <div class="mt-6">
+        <button
+          id="enter-universe-cta"
+          type="button"
+          class="px-6 py-3 rounded-full bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 text-white font-bold text-sm sm:text-base shadow-lg shadow-rose-400/35 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+        >
+          Deschide surpriza, Anca 💖
+        </button>
+      </div>
     </div>
   </section>
 
   <!-- ========================================================= -->
   <!-- CONȚINUTUL PRINCIPAL AL UNIVERSULUI ANCĂI                 -->
   <!-- ========================================================= -->
-  <main id="main-universe" class="hidden opacity-0 transition-opacity duration-700 max-w-5xl mx-auto px-4 sm:px-6 pt-16 pb-24 space-y-10 sm:space-y-14">
+  <main id="main-universe" class="hidden opacity-0 transition-opacity duration-700 max-w-5xl mx-auto px-4 sm:px-6 pt-16 pb-32 space-y-10 sm:space-y-14">
 
     <!-- Antet & Sfat interactiv -->
     <header class="text-center max-w-2xl mx-auto pt-2">
@@ -273,6 +391,93 @@
         Explorează fiecare surpriză de mai jos, joacă-te în voie și nu uita: oriunde apeși sau miști degetul, apar inimi și mesaje doar pentru tine! 💕
       </p>
     </header>
+
+    <!-- ======================================================= -->
+    <!-- 2. RAMA FOTO POLAROID „NOI DOI 💕”                      -->
+    <!-- ======================================================= -->
+    <section class="relative max-w-xl mx-auto pt-2">
+      <div class="text-center mb-4">
+        <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-rose-100/90 text-rose-700 text-xs font-bold uppercase tracking-wider">
+          📸 Amintirea noastră preferată
+        </span>
+        <h3 class="font-serif text-2xl sm:text-3xl font-bold text-rose-950 mt-1">
+          Noi doi 💕
+        </h3>
+      </div>
+
+      <!-- Rama Polaroid decorată -->
+      <div class="relative bg-[#fffdf9] p-4 sm:p-6 pb-7 sm:pb-8 rounded-3xl shadow-2xl shadow-rose-900/10 border border-rose-100 transform -rotate-1 hover:rotate-0 transition-transform duration-500">
+        <!-- Benzi adezive decorative (Washi Tape) în colțurile de sus -->
+        <div class="washi-tape w-24 h-6 rounded-sm absolute -top-2.5 left-6 -rotate-12 z-20 pointer-events-none"></div>
+        <div class="washi-tape w-24 h-6 rounded-sm absolute -top-2.5 right-6 rotate-12 z-20 pointer-events-none"></div>
+
+        <!-- Inimioare decorative pe colțurile ramei -->
+        <span class="absolute -bottom-3 -left-2 text-2xl sm:text-3xl select-none pointer-events-none drop-shadow">💖</span>
+        <span class="absolute -bottom-3 -right-2 text-2xl sm:text-3xl select-none pointer-events-none drop-shadow">✨</span>
+
+        <!-- Zona Fotografiei -->
+        <div
+          id="polaroid-photo-area"
+          class="relative aspect-[4/3] w-full rounded-2xl overflow-hidden bg-gradient-to-br from-rose-100 via-pink-50 to-amber-100 border border-rose-200/70 shadow-inner group cursor-pointer"
+        >
+          <!-- Imaginea principală (încearcă poza.gif implicit, apoi poza.jpg / .png / .webp) -->
+          <img
+            id="couple-photo"
+            src="poza.gif"
+            alt="Noi doi"
+            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+
+          <!-- Insignă discretă când este activ un GIF animat -->
+          <span
+            id="gif-active-badge"
+            class="hidden absolute top-3 left-3 z-20 px-2.5 py-1 rounded-full bg-rose-500/90 backdrop-blur-md text-white text-[11px] font-bold tracking-wide shadow-md pointer-events-none"
+          >
+            GIF ✨
+          </span>
+
+          <!-- Buton discret pentru schimbarea pozei sau GIF-ului (vizibil la hover sau pe mobil) -->
+          <button
+            id="change-photo-btn"
+            type="button"
+            class="hidden absolute top-3 right-3 z-20 px-3 py-1.5 rounded-full bg-white/85 backdrop-blur-md text-rose-800 text-xs font-bold shadow-md border border-rose-200/80 opacity-90 sm:opacity-0 sm:group-hover:opacity-100 hover:bg-white active:scale-95 transition-all cursor-pointer"
+          >
+            Schimbă poza / GIF-ul 🎞️
+          </button>
+
+          <!-- Stare de rezervă dacă poza.gif sau poza.jpg nu există încă în folder -->
+          <div
+            id="photo-placeholder"
+            class="hidden absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-gradient-to-br from-rose-100/95 via-pink-50/95 to-amber-100/95"
+          >
+            <div class="text-4xl sm:text-5xl mb-2 animate-bounce" style="animation-duration: 2.8s;">💑</div>
+            <p class="font-serif text-lg sm:text-xl font-bold text-rose-950">
+              Locul pentru poza sau GIF-ul cu noi doi
+            </p>
+            <p class="text-xs sm:text-sm text-rose-800/80 max-w-xs mt-1 mb-4">
+              Pune un fișier <code class="px-1.5 py-0.5 rounded bg-white/80 text-rose-700 font-semibold">poza.gif</code> (sau <code class="px-1.5 py-0.5 rounded bg-white/80 text-rose-700 font-semibold">poza.jpg</code>) lângă HTML ori alege-l direct! ✨
+            </p>
+            <button
+              id="choose-photo-btn"
+              type="button"
+              class="px-5 py-2.5 rounded-full bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 text-white font-bold text-xs sm:text-sm shadow-md shadow-rose-400/30 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+            >
+              Alege poza sau GIF-ul nostru 🎞️
+            </button>
+          </div>
+        </div>
+
+        <input id="photo-file-input" type="file" accept="image/gif,image/jpeg,image/png,image/webp,image/*" class="hidden" />
+            class="font-hand text-2xl sm:text-3xl font-bold text-rose-950 px-2 py-0.5 rounded-xl focus:outline-none focus:bg-rose-50/90 transition-colors"
+          >
+            Noi doi ❤️ — Cea mai frumoasă poveste
+          </p>
+          <p id="polaroid-sweet-note" class="text-xs sm:text-sm font-medium text-rose-700/85 transition-all duration-300">
+            Apasă pe fotografie pentru o ploaie de inimi 💕
+          </p>
+        </div>
+      </div>
+    </section>
 
     <!-- ======================================================= -->
     <!-- 3. JOCUL „VÂNĂTOAREA DE INIMI SECRETE”                  -->
@@ -635,55 +840,122 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       /* ---------------------------------------------------------
-         0. SINTETIZATOR SUNETE DELICATE (WEB AUDIO API)
+         RAMA FOTO POLAROID „NOI DOI 💕” (SUPORT .GIF & IMAGINI)
          --------------------------------------------------------- */
-      let audioCtx = null;
-      let soundEnabled = true;
+      const couplePhotoImg = document.getElementById('couple-photo');
+      const gifActiveBadge = document.getElementById('gif-active-badge');
+      const photoPlaceholder = document.getElementById('photo-placeholder');
+      const choosePhotoBtn = document.getElementById('choose-photo-btn');
+      const changePhotoBtn = document.getElementById('change-photo-btn');
+      const photoFileInput = document.getElementById('photo-file-input');
+      const polaroidPhotoArea = document.getElementById('polaroid-photo-area');
+      const polaroidSweetNote = document.getElementById('polaroid-sweet-note');
 
-      function initAudio() {
-        if (!audioCtx) {
-          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-          if (AudioContextClass) {
-            audioCtx = new AudioContextClass();
+      const polaroidNotes = [
+        'Fiecare clipă cu tine e preferata mea ✨',
+        'Tu + Eu = Cea mai frumoasă echipă 🥰',
+        'Zâmbetul nostru spune totul 💖',
+        'Cu tine orice zi devine o amintire magică 🌸',
+        'Abia aștept următoarele noastre aventuri împreună 💕'
+      ];
+      let polaroidNoteIdx = 0;
+
+      // Ordinea automată de căutare în folderul local (prioritate pentru .gif animat)
+      const localMediaCandidates = ['poza.gif', 'poza.jpg', 'poza.png', 'poza.webp'];
+      let candidateIndex = 0;
+      let isManualSelection = false;
+      let currentObjectUrl = null;
+
+      function updateGifBadge(isGif) {
+        if (isGif) {
+          gifActiveBadge.classList.remove('hidden');
+        } else {
+          gifActiveBadge.classList.add('hidden');
+        }
+      }
+
+      function showPhotoLoadedState() {
+        photoPlaceholder.classList.add('hidden');
+        couplePhotoImg.classList.remove('hidden');
+        changePhotoBtn.classList.remove('hidden');
+      }
+
+      function showPhotoFallbackState() {
+        couplePhotoImg.classList.add('hidden');
+        changePhotoBtn.classList.add('hidden');
+        gifActiveBadge.classList.add('hidden');
+        photoPlaceholder.classList.remove('hidden');
+      }
+
+      function tryNextLocalCandidate() {
+        if (!isManualSelection && candidateIndex + 1 < localMediaCandidates.length) {
+          candidateIndex++;
+          couplePhotoImg.src = localMediaCandidates[candidateIndex];
+          return true;
+        }
+        showPhotoFallbackState();
+        return false;
+      }
+
+      couplePhotoImg.addEventListener('load', () => {
+        if (couplePhotoImg.naturalWidth > 0) {
+          showPhotoLoadedState();
+          if (!isManualSelection) {
+            const currentSrc = (couplePhotoImg.getAttribute('src') || '').toLowerCase();
+            updateGifBadge(currentSrc.endsWith('.gif'));
           }
         }
-        if (audioCtx && audioCtx.state === 'suspended') {
-          audioCtx.resume();
+      });
+
+      couplePhotoImg.addEventListener('error', () => {
+        tryNextLocalCandidate();
+      });
+
+      // Verificăm starea inițială dacă imaginea/GIF-ul era deja în cache
+      if (couplePhotoImg.complete) {
+        if (couplePhotoImg.naturalWidth > 0) {
+          showPhotoLoadedState();
+          const currentSrc = (couplePhotoImg.getAttribute('src') || '').toLowerCase();
+          updateGifBadge(currentSrc.endsWith('.gif'));
+        } else {
+          tryNextLocalCandidate();
         }
       }
 
-      function playChime(freq = 587.33, duration = 0.45, type = 'sine', volume = 0.08) {
-        if (!soundEnabled) return;
-        try {
-          initAudio();
-          if (!audioCtx) return;
+      choosePhotoBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        photoFileInput.click();
+      });
 
-          const now = audioCtx.currentTime;
-          const osc = audioCtx.createOscillator();
-          const gain = audioCtx.createGain();
+      changePhotoBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        photoFileInput.click();
+      });
 
-          osc.type = type;
-          osc.frequency.setValueAtTime(freq, now);
-          osc.frequency.exponentialRampToValueAtTime(freq * 1.015, now + duration);
+      photoFileInput.addEventListener('change', (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
 
-          gain.gain.setValueAtTime(0.0001, now);
-          gain.gain.linearRampToValueAtTime(volume, now + 0.02);
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
-
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
-
-          osc.start(now);
-          osc.stop(now + duration + 0.05);
-        } catch (err) {
-          // Ignorăm discret dacă browserul blochează audio înainte de interacțiune
+        if (currentObjectUrl) {
+          URL.revokeObjectURL(currentObjectUrl);
         }
-      }
 
-      function playChord(frequencies = [523.25, 659.25, 783.99, 1046.5]) {
-        frequencies.forEach((f, idx) => {
-          setTimeout(() => playChime(f, 0.7, 'sine', 0.07), idx * 75);
-        });
+        isManualSelection = true;
+        currentObjectUrl = URL.createObjectURL(file);
+
+        // Asignăm direct pe elementul <img> nativ ca animația .gif să ruleze fluid la nesfârșit
+        couplePhotoImg.src = currentObjectUrl;
+        showPhotoLoadedState();
+
+        const isGifFile = file.type === 'image/gif' || file.name.toLowerCase().endsWith('.gif');
+        updateGifBadge(isGifFile);
+
+        triggerHeartRain(36);
+        playChord([523.25, 659.25, 783.99, 1046.5]);
+        polaroidSweetNote.textContent = isGifFile
+          ? 'Ce GIF animat superb cu noi doi! 🎞️💖'
+          : 'Ce poză superbă cu noi doi! 🥰💖';
+      });
       }
 
       const soundToggleBtn = document.getElementById('sound-toggle');
@@ -697,10 +969,10 @@
           initAudio();
           playChime(783.99, 0.35);
           soundIcon.textContent = '🎵';
-          soundLabel.textContent = 'Sunet: Pornit';
+          soundLabel.textContent = 'Efecte: Pornite';
         } else {
           soundIcon.textContent = '🔇';
-          soundLabel.textContent = 'Sunet: Oprit';
+          soundLabel.textContent = 'Efecte: Oprite';
         }
       });
 
@@ -724,13 +996,13 @@
       const heartColors = ['#fb7185', '#f43f5e', '#ec4899', '#f59e0b', '#c084fc', '#fda4af'];
       const floatingPhrases = [
         'Ești minunată! ✨',
-        'Te iubesc! 💖',
         'Zâmbește, Anca! 🌸',
+        'Te iubesc! 💖',
+        'Ești preferata mea 🥰',
+        'Cu tine totul e mai frumos ✨',
         'Cea mai faină! 🦋',
         'Strălucești azi! 🌟',
-        'Ești magia mea! 💫',
-        'Superbă ca întotdeauna! 💕',
-        'Ador zâmbetul tău! 🥰'
+        'Ador zâmbetul tău! 💕'
       ];
 
       function spawnParticles(x, y, count = 10, burst = false) {
@@ -750,6 +1022,28 @@
             rotation: Math.random() * Math.PI * 2,
             rotSpeed: (Math.random() - 0.5) * 0.08
           });
+        }
+      }
+
+      function triggerHeartRain(total = 32) {
+        for (let i = 0; i < total; i++) {
+          setTimeout(() => {
+            const rx = Math.random() * window.innerWidth;
+            const ry = -10 - Math.random() * 40;
+            particles.push({
+              x: rx,
+              y: ry,
+              vx: (Math.random() - 0.5) * 1.6,
+              vy: 1.8 + Math.random() * 2.4,
+              size: 10 + Math.random() * 10,
+              alpha: 1,
+              decay: 0.008 + Math.random() * 0.006,
+              color: heartColors[Math.floor(Math.random() * heartColors.length)],
+              shape: Math.random() > 0.2 ? 'heart' : 'sparkle',
+              rotation: Math.random() * Math.PI * 2,
+              rotSpeed: (Math.random() - 0.5) * 0.06
+            });
+          }, i * 35);
         }
       }
 
@@ -859,14 +1153,165 @@
       });
 
       /* ---------------------------------------------------------
+         PLAYER MUZICAL PLUTITOR (music.mp3 + SELECTARE FIȘIER)
+         --------------------------------------------------------- */
+      const bgMusic = document.getElementById('bgMusic');
+      const musicPlayBtn = document.getElementById('music-play-btn');
+      const musicPlayIcon = document.getElementById('music-play-icon');
+      const musicPlayText = document.getElementById('music-play-text');
+      const musicTitleEl = document.getElementById('music-title');
+      const musicSubtitleEl = document.getElementById('music-subtitle');
+      const vinylDiscEl = document.getElementById('vinyl-disc');
+      const eqBarsEl = document.getElementById('eq-bars');
+      const musicFileInput = document.getElementById('music-file-input');
+
+      function setMusicUIState(playing) {
+        if (playing) {
+          vinylDiscEl.classList.add('is-playing');
+          eqBarsEl.classList.add('eq-active');
+          musicPlayIcon.textContent = '⏸';
+          musicPlayText.textContent = 'Pauză';
+        } else {
+          vinylDiscEl.classList.remove('is-playing');
+          eqBarsEl.classList.remove('eq-active');
+          musicPlayIcon.textContent = '▶';
+          musicPlayText.textContent = 'Play';
+        }
+      }
+
+      bgMusic.addEventListener('play', () => setMusicUIState(true));
+      bgMusic.addEventListener('pause', () => setMusicUIState(false));
+
+      musicPlayBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (bgMusic.paused) {
+          const playPromise = bgMusic.play();
+          if (playPromise !== undefined) {
+            playPromise
+              .then(() => {
+                if (musicSubtitleEl.textContent.includes('Apasă Play')) {
+                  musicSubtitleEl.textContent = 'Se redă acum • Melodia noastră 💕';
+                }
+                const rect = musicPlayBtn.getBoundingClientRect();
+                spawnParticles(rect.left + rect.width / 2, rect.top, 14, true);
+              })
+              .catch(() => {
+                setMusicUIState(false);
+                musicSubtitleEl.textContent = 'Nu am găsit music.mp3 — alege din 📁';
+                musicFileInput.click();
+              });
+          }
+        } else {
+          bgMusic.pause();
+        }
+      });
+
+      musicFileInput.addEventListener('change', (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const objectUrl = URL.createObjectURL(file);
+        bgMusic.src = objectUrl;
+        const cleanName = file.name.replace(/\.[^/.]+$/, '');
+        musicTitleEl.textContent = `${cleanName} ♪`;
+        musicSubtitleEl.textContent = 'Melodie selectată • Redare activă 💖';
+        bgMusic.play().catch(() => {});
+      });
+
+      /* ---------------------------------------------------------
+         RAMA FOTO POLAROID „NOI DOI 💕”
+         --------------------------------------------------------- */
+      const couplePhotoImg = document.getElementById('couple-photo');
+      const photoPlaceholder = document.getElementById('photo-placeholder');
+      const choosePhotoBtn = document.getElementById('choose-photo-btn');
+      const changePhotoBtn = document.getElementById('change-photo-btn');
+      const photoFileInput = document.getElementById('photo-file-input');
+      const polaroidPhotoArea = document.getElementById('polaroid-photo-area');
+      const polaroidSweetNote = document.getElementById('polaroid-sweet-note');
+
+      const polaroidNotes = [
+        'Fiecare clipă cu tine e preferata mea ✨',
+        'Tu + Eu = Cea mai frumoasă echipă 🥰',
+        'Zâmbetul nostru spune totul 💖',
+        'Cu tine orice zi devine o amintire magică 🌸',
+        'Abia aștept următoarele noastre aventuri împreună 💕'
+      ];
+      let polaroidNoteIdx = 0;
+
+      function showPhotoLoadedState() {
+        photoPlaceholder.classList.add('hidden');
+        couplePhotoImg.classList.remove('hidden');
+        changePhotoBtn.classList.remove('hidden');
+      }
+
+      function showPhotoFallbackState() {
+        couplePhotoImg.classList.add('hidden');
+        changePhotoBtn.classList.add('hidden');
+        photoPlaceholder.classList.remove('hidden');
+      }
+
+      couplePhotoImg.addEventListener('load', () => {
+        if (couplePhotoImg.naturalWidth > 0) {
+          showPhotoLoadedState();
+        }
+      });
+
+      couplePhotoImg.addEventListener('error', () => {
+        showPhotoFallbackState();
+      });
+
+      // Verificăm starea inițială dacă imaginea era deja în cache
+      if (couplePhotoImg.complete) {
+        if (couplePhotoImg.naturalWidth > 0) {
+          showPhotoLoadedState();
+        } else {
+          showPhotoFallbackState();
+        }
+      }
+
+      choosePhotoBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        photoFileInput.click();
+      });
+
+      changePhotoBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        photoFileInput.click();
+      });
+
+      photoFileInput.addEventListener('change', (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const imgUrl = URL.createObjectURL(file);
+        couplePhotoImg.src = imgUrl;
+        showPhotoLoadedState();
+        triggerHeartRain(36);
+        playChord([523.25, 659.25, 783.99, 1046.5]);
+        polaroidSweetNote.textContent = 'Ce poză superbă cu noi doi! 🥰💖';
+      });
+
+      polaroidPhotoArea.addEventListener('click', (e) => {
+        e.stopPropagation();
+        // Dacă nu e încă încărcată poza, deschidem selectorul
+        if (couplePhotoImg.classList.contains('hidden')) {
+          photoFileInput.click();
+          return;
+        }
+        triggerHeartRain(30);
+        playChime(783.99, 0.55);
+        polaroidSweetNote.textContent = polaroidNotes[polaroidNoteIdx % polaroidNotes.length];
+        polaroidNoteIdx++;
+      });
+
+      /* ---------------------------------------------------------
          1. ECRAN DE BUN VENIT PENTRU ANCA
          --------------------------------------------------------- */
       const welcomeScreen = document.getElementById('welcome-screen');
       const mainUniverse = document.getElementById('main-universe');
       const enterBtn = document.getElementById('enter-universe-btn');
+      const enterCtaBtn = document.getElementById('enter-universe-cta');
 
-      enterBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
+      function openAncaUniverse(e) {
+        if (e) e.stopPropagation();
         initAudio();
         playChord([523.25, 659.25, 783.99, 1046.5]);
 
@@ -887,7 +1332,10 @@
             mainUniverse.style.opacity = '1';
           });
         }, 550);
-      });
+      }
+
+      enterBtn.addEventListener('click', openAncaUniverse);
+      enterCtaBtn.addEventListener('click', openAncaUniverse);
 
       /* ---------------------------------------------------------
          3. JOCUL „VÂNĂTOAREA DE INIMI SECRETE” (10 INIMI)
